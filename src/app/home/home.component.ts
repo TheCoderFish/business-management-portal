@@ -9,7 +9,7 @@ import { TestPortComponent } from '../modules/wizard/test-port/test-port.compone
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild(CdkPortalOutlet)
+  @ViewChild(CdkPortalOutlet, { read: CdkPortalOutlet })
   portalOutlet: CdkPortalOutlet;
 
   componentPortal: ComponentPortal<TestPortComponent>;
