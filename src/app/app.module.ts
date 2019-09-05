@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './modules/shared/material/material.module';
 import { HomeComponent } from './home/home.component';
+import { WizardModule } from './modules/wizard/wizard.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule,
     MaterialModule,
+    WizardModule,
     AppRoutingModule
   ],
   providers: [],

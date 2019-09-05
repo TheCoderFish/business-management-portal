@@ -1,1 +1,6 @@
-<button (click)="addBusiness()">Add Business</button>
+<div class="portal-outlet">
+    <ng-template *cdkPortalOutlet></ng-template>
+</div>
+<ng-container *ngIf="!portalAttached">
+    <button (click)="attachWizard()">Add Business</button>
+</ng-container>
