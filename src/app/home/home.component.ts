@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Portal, ComponentPortal, CdkPortalOutlet, CdkPortal } from '@angular/cdk/portal';
-import { TestPortComponent } from '../modules/wizard/test-port/test-port.component';
+import { ComponentPortal, CdkPortalOutlet } from '@angular/cdk/portal';
+import { BusinessDataFormComponent } from '../modules/wizard/business-data-form/business-data-form.component';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(CdkPortalOutlet, { static: true })
   portalOutlet: CdkPortalOutlet;
 
-  componentPortal: ComponentPortal<TestPortComponent>;
+  componentPortal: ComponentPortal<BusinessDataFormComponent>;
 
   constructor() { }
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.componentPortal = new ComponentPortal(TestPortComponent);
+    this.componentPortal = new ComponentPortal(BusinessDataFormComponent);
   }
 
   get portalAttached() {

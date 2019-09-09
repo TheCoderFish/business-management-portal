@@ -1,0 +1,39 @@
+<mat-horizontal-stepper linear>
+    <mat-step label="Add Business Data" [stepControl]="businessData">
+        <!-- form 1 -->
+        <form novalidate [formGroup]="businessData" (ngSubmit)="onSubmit()" class="form">
+            <mat-form-field>
+                <input matInput placeholder="Business name" formControlName="name" required>
+            </mat-form-field>
+            <div formArrayName="addresses">
+                <ng-container *ngFor="let address of addresses.controls;let i=index">
+                    <div [formGroupName]="i">
+                        <mat-form-field class="full-width">
+                            <mat-label>Choose city</mat-label>
+                            <mat-select formControlName="city" [disabled]="!(i=== addresses.length - 1)">
+                                <ng-container *ngFor="let item of items[i];let i=index">
+                                    <mat-option value="{{item}}"> {{item}}</mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="full-width">
+                            <textarea matInput placeholder="Enter complete address"
+                                formControlName="completeAddress"></textarea>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+            </div>
+            <button  mat-raised-button color="primary" type="button" #addCity (click)="addCityAddress()" [disabled]="businessData.invalid">Add
+                City</button>
+            <button  mat-raised-button color="warn" type="button" (click)="removeCity()">Remove City</button>
+           <!--  <button type="submit">Submit</button> -->
+            <div>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="Business Domains">
+        <!-- form 2 -->
+    </mat-step>
+</mat-horizontal-stepper>
