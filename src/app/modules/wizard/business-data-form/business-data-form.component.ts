@@ -2,8 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CityListProviderService } from '../services/city-list-provider.service';
+import { MatSelectChange } from '@angular/material';
 
-const selectedCities = [];
+interface city {
+  id: number;
+  name: string;
+  state: string;
+}
 
 @Component({
   selector: 'app-business-data-form',
@@ -14,31 +20,21 @@ export class BusinessDataFormComponent implements OnInit {
 
   private businessData: FormGroup;
   private cityEmitter = new Subject<any>();
-  private items: string[][];
+  private cityLists: string[][] = [];
+  private selectedCities = [];
+  private cityListData = [];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private cityService: CityListProviderService) { }
 
   ngOnInit() {
-
     this.businessData = this.fb.group({
       name: [''],
       addresses: this.fb.array([])
     });
 
-    this.items = [['a', 'b', 'c', 'd', 'e', 'f', 'g']];
-
-    this.cityEmitter.pipe(
-      filter(value => value !== null),
-      map(x => x.city)
-    ).subscribe((city: string) => {
-      if (!selectedCities.includes(city)) {
-        selectedCities.push(city);
-        const arrIndex = selectedCities.length;
-        const arr = this.items[arrIndex - 1];
-        const k = arr.indexOf(city);
-        this.items.push(arr.slice(0, k).concat(arr.slice(k + 1)));
-      }
-    });
+    this.cityService.getCities().subscribe(cities => {
+      this.cityListData = cities;
+    })
   }
 
   get addresses() {
@@ -51,17 +47,47 @@ export class BusinessDataFormComponent implements OnInit {
       completeAddress: ['']
     });
     this.addresses.push(address);
-    if (this.addresses.length > 1) {
-      this.cityEmitter.next(this.businessData.value.addresses[this.addresses.length - 2]);
-    }
+    this.cityLists.push(this.cityListData.filter(city => !this.selectedCities.includes(city)));
   }
 
   removeCity() {
     this.addresses.removeAt(this.addresses.length - 1);
-    if (this.items.length !== 1) {
-      this.items.pop();
+    this.cityLists.pop();
+    if (this.addresses.length !== this.selectedCities.length) {
+      const poppedCity = this.selectedCities.pop();
+      this.cityLists.forEach(list => {
+        list.push(poppedCity);
+      })
     }
-    selectedCities.pop();
+  }
+
+  citySelected(selection: MatSelectChange) {
+    const city = selection.value;
+    if (this.addresses.length !== this.selectedCities.length) {
+      selection.source.id = this.addresses.length - 1 + '';
+    }
+    const id = parseInt(selection.source.id);
+
+    if (this.selectedCities[`${id}`]) {
+      const oldCity = this.selectedCities[id];
+      const newCity = city;
+      this.cityLists.forEach((list, i) => {
+        if (i !== id) {
+          list.push(oldCity);
+          this.cityLists[i] = list.filter(cityIt => cityIt !== newCity);
+        }
+      })
+
+
+      this.selectedCities[`${id}`] = city;
+    } else {
+      this.cityLists.forEach((list, i) => {
+        if (i !== id) {
+          this.cityLists[i] = list.filter(cityIt => cityIt !== city);
+        }
+      })
+      this.selectedCities[`${id}`] = city;
+    }
   }
 
   onSubmit() {

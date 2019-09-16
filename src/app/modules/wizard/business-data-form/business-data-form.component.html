@@ -2,16 +2,17 @@
     <mat-step label="Add Business Data" [stepControl]="businessData">
         <!-- form 1 -->
         <form novalidate [formGroup]="businessData" (ngSubmit)="onSubmit()" class="form">
-            <mat-form-field>
+            <mat-form-field class="full-width">
                 <input matInput placeholder="Business name" formControlName="name" required>
+                <mat-hint>Business name should not exceed 250 characters</mat-hint>
             </mat-form-field>
             <div formArrayName="addresses">
                 <ng-container *ngFor="let address of addresses.controls;let i=index">
                     <div [formGroupName]="i">
                         <mat-form-field class="full-width">
                             <mat-label>Choose city</mat-label>
-                            <mat-select formControlName="city" [disabled]="!(i=== addresses.length - 1)">
-                                <ng-container *ngFor="let item of items[i];let i=index">
+                            <mat-select formControlName="city" (selectionChange)="citySelected($event)">
+                                <ng-container *ngFor="let item of cityLists[i];let i=index">
                                     <mat-option value="{{item}}"> {{item}}</mat-option>
                                 </ng-container>
                             </mat-select>
@@ -24,12 +25,15 @@
                     </div>
                 </ng-container>
             </div>
-            <button  mat-raised-button color="primary" type="button" #addCity (click)="addCityAddress()" [disabled]="businessData.invalid">Add
-                City</button>
-            <button  mat-raised-button color="warn" type="button" (click)="removeCity()">Remove City</button>
-           <!--  <button type="submit">Submit</button> -->
-            <div>
-                <button mat-button matStepperNext>Next</button>
+            <div class="spacer"></div>
+            <button mat-raised-button type="button" #addCity (click)="addCityAddress()"
+                [disabled]="businessData.invalid">Add
+                Business Address</button>
+            <ng-container *ngIf="addresses.length">
+                <button mat-raised-button color="warn" type="button" (click)="removeCity()">Remove City</button>
+            </ng-container>
+            <div class="spacer">
+                <button mat-raised-button color="primary" mat-button matStepperNext>Next</button>
             </div>
         </form>
     </mat-step>

@@ -7,32 +7,29 @@ import { BusinessDataFormComponent } from '../modules/wizard/business-data-form/
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class HomeComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild(CdkPortalOutlet, { static: true })
-  portalOutlet: CdkPortalOutlet;
+  private portalOutlet: CdkPortalOutlet;
 
-  componentPortal: ComponentPortal<BusinessDataFormComponent>;
+  private componentPortal: ComponentPortal<BusinessDataFormComponent>;
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
   ngAfterViewInit(): void {
     this.componentPortal = new ComponentPortal(BusinessDataFormComponent);
   }
 
-  get portalAttached() {
+  get portalAttached(): boolean {
     return this.portalOutlet.hasAttached();
   }
 
-  attachWizard() {
+  private attachWizard(): void {
     this.portalOutlet.attach(this.componentPortal);
   }
 
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.portalOutlet.detach();
   }
 }
+

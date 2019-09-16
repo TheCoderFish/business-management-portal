@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { PortalModule } from '@angular/cdk/portal';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MaterialModule } from './modules/shared/material/material.module';
 import { HomeComponent } from './home/home.component';
+import { AppRoutingModule } from './app-routing.module';
 import { WizardModule } from './modules/wizard/wizard.module';
 
 @NgModule({
@@ -14,9 +14,9 @@ import { WizardModule } from './modules/wizard/wizard.module';
   ],
   imports: [
     BrowserModule,
-    MaterialModule,
-    WizardModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PortalModule,
+    WizardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
